@@ -37,17 +37,17 @@
             } 
         }) {
             try {
-                app.use(express.json()); // Para interpretar JSON no body da requisição
+                app.use(express.json());
         
                 app.post(`${options.router ? options.router : '/'}`, (req, res) => {
                     console.log(`REQ: ${options.router ? options.router : 'index'} 202`);
                     const body = req.body;
-                    const params = req.query; // Pega parâmetros da URL (?nome=Nicolau)
+                    const params = req.query; 
         
-                    // Processar o body com a função fornecida
+
                     const processedData = options.process(body, params);
         
-                    // Enviar a resposta com base no tipo definido
+
                     if (options.type_response === 'send') {
                         res.send(options.dataToResponse);
                     } else if (options.type_response === 'json') {
@@ -79,12 +79,12 @@
 
     const FILE_PATH = './simpleApi/tags.json';
 
-    // Função para carregar as tags do arquivo
+
     function loadTags() {
         try {
             const data = fs.readFileSync(FILE_PATH, 'utf8');
             const parsedData = JSON.parse(data);
-            // Verifica se o formato carregado é válido
+
             if (Array.isArray(parsedData)) {
                 return parsedData;
             } else {
@@ -93,7 +93,7 @@
             }
         } catch (err) {
             if (err.code === 'ENOENT') {
-                // Se o arquivo não existir, retorna um array vazio
+   
                 return [];
             }
             console.error('Erro ao carregar o arquivo:', err);
@@ -101,7 +101,6 @@
         }
     }
 
-    // Função para salvar as tags no arquivo
     function saveTags(tags) {
         try {
             fs.writeFileSync(FILE_PATH, JSON.stringify(tags, null, 2));
@@ -110,60 +109,59 @@
         }
     }
 
-    // Inicializa as tags com os dados salvos (ou vazio se o arquivo não existir)
+
     let tags = loadTags();
 
     export function Tags() {
-        // Função para criar uma nova tag
+
         const NewTag = (tagname, state) => {
-            // Verifica se a tag já existe
+
             const existingTag = tags.find(t => t.tagname === tagname);
             if (existingTag) {
                 console.log(`Tag "${tagname}" já existe!`);
                 return;
             }
-            // Se não existir, cria a tag
+
             tags.push({ id: tags.length + 1, tagname, state });
-            saveTags(tags); // Salva as tags sempre que cria uma nova
+            saveTags(tags);
             console.log(`Tag "${tagname}" criada com sucesso!`);
         };
 
-        // Função para acessar o estado de uma tag
         const accessTag = (tagname) => {
             const tag = tags.find(t => t.tagname === tagname);
             return tag ? tag.state : 'Tag não encontrada';
         };
 
-        // Função para atualizar o estado de uma tag existente
+
         const updateTag = (tagname, newState) => {
             const tag = tags.find(t => t.tagname === tagname);
             if (tag) {
-                // Validar o formato do estado antes de atualizar
+         
                 if (typeof newState !== 'object') {
                     console.log('Erro: O estado deve ser um objeto.');
                     return;
                 }
-                tag.state = newState; // Atualiza o estado da tag
-                saveTags(tags); // Salva as tags após a atualização
+                tag.state = newState; 
+                saveTags(tags); 
                 console.log(`Tag "${tagname}" atualizada com sucesso!`);
             } else {
                 console.log(`Tag "${tagname}" não encontrada.`);
             }
         };
 
-        // Função para excluir uma tag
+
         const deleteTag = (tagname) => {
             const tagIndex = tags.findIndex(t => t.tagname === tagname);
             if (tagIndex !== -1) {
-                tags.splice(tagIndex, 1); // Remove a tag do array
-                saveTags(tags); // Salva as tags após a exclusão
+                tags.splice(tagIndex, 1);
+                saveTags(tags); 
                 console.log(`Tag "${tagname}" excluída com sucesso!`);
             } else {
                 console.log(`Tag "${tagname}" não encontrada.`);
             }
         };
 
-        // Função para listar todas as tags
+
         const listTags = () => {
             return tags.length > 0 ? tags : 'Não há tags disponíveis.';
         };
