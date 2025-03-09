@@ -1,37 +1,16 @@
-import { CRUD, Tags } from './simpleApi/index.js';
+import DTF from './DTF/index.js';
 
-const mycrud = new CRUD('Meu crud', 3000);
-const [NewTag, accesstag, updateTag] = Tags();
-
-
-
-
-NewTag('Users', [{ Name: 'Nicolas' }]);
+const Tags = DTF.Tags(); // Manipulação de tags
+const WebCreator = new DTF.WebCreatorStaticPages('Meu site','pt-br'); // Criação de páginas estáticas
+const Kit = WebCreator.WebKitCreator()  
 
 
-mycrud.res({
-    router: '/Users',
-    type_response: 'json',
-    dataToResponse: accesstag('Users'),
+WebCreator.build({
+  fileMain: 'index', 
+  content: [
+    Kit.Div([
+    ]),
+    Kit.Connect('./handler.html')
+  ]
 });
 
-
-mycrud.req({
-    router: '/Users',
-    type_response: 'json',
-    dataToResponse: accesstag('Users'),
-    process: (body) => {
-        
-        const currentData = accesstag('Users');
-        const newData = Array.isArray(body) ? body : [body];
-
-        
-        updateTag('Users', [...currentData, ...newData]);
-
-        
-        return accesstag('Users');
-    },
-});
-
-
-mycrud.Init();

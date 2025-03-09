@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "tagname": "Users",
+    "state": [
+      {
+        "Name": "Nicolas"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "tagname": "My tag",
+    "state": "Este é um estado"
+  }
+]
